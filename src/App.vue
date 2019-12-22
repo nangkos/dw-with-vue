@@ -4,16 +4,40 @@
       <v-toolbar flat color="transparent">
         <v-toolbar-title>Account</v-toolbar-title>
       </v-toolbar>
-      <v-divider></v-divider>
       <v-list>
-        <v-list-tile v-for="item in items" :key="item.title" :to="item.to">
+        <!-- <v-list-tile v-for="item in items" :key="item.title" :to="item.to">
           <v-list-tile-avatar>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile>
+        </v-list-tile> -->
+        <v-list-group
+          v-for="item in items"
+          :key="item.title"
+          v-model="item.active"
+          :prepend-icon="item.icon"
+          no-action
+        >
+          <template v-slot:activator>
+            <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </template>
+
+          <v-list-tile
+            v-for="subItem in item.subItems"
+            :key="subItem.title"
+            :to="subItem.to"
+          >
+            <v-list-tile-content>
+              <v-list-tile-title>{{ subItem.title }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar>
@@ -46,16 +70,28 @@ export default {
         {
           icon: 'mdi-alert',
           title: 'Home',
-          to: '/'
+          active: true,
+          subItems: [
+            {
+              title: 'dashboard',
+              to: '/'
+            },
+            {
+              title: 'About',
+              to: '/about'
+            }
+          ]
         },
         {
           icon: 'mdi-alert-box',
-          title: 'About',
-          to: '/about'
-        },
-        {
-          icon: 'mdi-alert-circle',
-          title: 'About2'
+          title: 'Lectures',
+          active: false,
+          subItems: [
+            {
+              title: 'card',
+              to: '/lecture/card'
+            }
+          ]
         }
       ]
     }
