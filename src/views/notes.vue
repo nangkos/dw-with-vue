@@ -40,7 +40,8 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn>수정</v-btn>
+              <v-btn @click="put(props.item.id)">수정</v-btn>
+              <v-btn @click="del(props.item.id)">삭제</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -62,19 +63,59 @@ export default {
     content: ''
   }),
   mounted () {
-    this.items.push({
-      title: 'abcd', content: 'Lorem'
-    })
-    this.items.push({
-      title: 'bbbbb', content: 'Lorem'
-    })
+    this.get()
   },
   methods: {
     post () {
-      this.items.push({
-        title: this.title,
-        content: this.content
-      })
+      // this.items.push({
+      //   title: this.title,
+      //   content: this.content
+      // })
+      this.$firebaseRefs.firestore().collection('notes')
+        .add({
+          title: this.title,
+          content: this.content
+        })
+        .then(data => {
+          this.get()
+          this.reset()
+        })
+    },
+    get () {
+      this.$firebaseRefs.firestore().collection('notes')
+        .get()
+        .then(snapshot => {
+          this.items = []
+          snapshot.forEach(doc => {
+            const { title, content } = doc.data()
+            this.items.push({
+              id: doc.id,
+              title,
+              content
+            })
+          })
+        })
+    },
+    put (id) {
+      this.$firebaseRefs.firestore().collection('notes').doc(id)
+        .set({
+          title: this.title,
+          content: this.content
+        })
+        .then(data => {
+          this.get()
+          this.reset()
+        })
+    },
+    del (id) {
+      this.$firebaseRefs.firestore().collection('notes')
+        .doc(id)
+        .delete()
+        .then(data => {
+          this.get()
+        })
+    },
+    reset () {
       this.title = ''
       this.content = ''
     }

@@ -8,4 +8,4 @@ import 'firebase/firestore'
 
 firebase.initializeApp(firebaseConfig)
 
-Vue.use(firebase)
+Vue.prototype.$firebaseRefs = firebase
