@@ -89,7 +89,11 @@ export default {
           subItems: [
             {
               title: 'card',
-              to: '/lecture/card'
+              to: '/lectures/card'
+            },
+            {
+              title: 'layout',
+              to: '/lectures/layout'
             }
           ]
         }
